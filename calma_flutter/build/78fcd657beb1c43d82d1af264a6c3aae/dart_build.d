@@ -1,0 +1,1 @@
+ /Users/martinmirandamejias/Documents/Proyectos/calma-app/calma_flutter/build/78fcd657beb1c43d82d1af264a6c3aae/dart_build_result.json:  /Users/martinmirandamejias/Documents/Proyectos/calma-app/calma_flutter/.dart_tool/package_config.json /Users/martinmirandamejias/Documents/Proyectos/calma-app/calma_flutter/pubspec.yaml /opt/homebrew/share/flutter/bin/cache/dart-sdk/version
