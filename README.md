@@ -2,6 +2,12 @@
 
 Una aplicación móvil y web para ayudar a las personas a gestionar ataques de ansiedad y pánico a través de ejercicios de respiración guiados y música calmante.
 
+## 🌐 Demo en Vivo
+
+**Prueba la aplicación aquí**: https://martinmiranda14.github.io/calma-app/
+
+> **Nota**: Después del primer push, debes habilitar GitHub Pages manualmente en Settings → Pages. Ver [DEPLOYMENT.md](DEPLOYMENT.md) para instrucciones detalladas.
+
 ## Características
 
 - **Botón de Pánico (SOS)**: Acceso inmediato a ejercicios de respiración
