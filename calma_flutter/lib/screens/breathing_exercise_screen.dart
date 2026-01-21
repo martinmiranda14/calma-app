@@ -68,17 +68,24 @@ class _BreathingExerciseScreenState extends State<BreathingExerciseScreen> with 
     });
   }
 
-  void _startBreathingExercise() {
+  void _startBreathingExercise() async {
     print('[DEBUG] Iniciando ejercicio de respiración');
     setState(() {
       _isExercising = true;
       _cycleCount = 0;
     });
 
-    // Iniciar audio si está habilitado (sin bloquear con await)
+    // Iniciar audio si está habilitado
+    // En web, esto funciona porque el usuario ya interactuó (presionó el botón)
     if (_audioEnabled) {
       print('[DEBUG] Iniciando audio 432Hz');
-      _audioService.playCalmingSound(frequency: '432Hz');
+      try {
+        await _audioService.playCalmingSound(frequency: '432Hz');
+        print('[DEBUG] Audio iniciado exitosamente');
+      } catch (e) {
+        print('[DEBUG] Error al iniciar audio: $e');
+        // Continuar sin audio si falla
+      }
     }
 
     print('[DEBUG] Llamando a _startBreathingCycle');
