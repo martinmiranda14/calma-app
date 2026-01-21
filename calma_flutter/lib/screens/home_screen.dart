@@ -65,6 +65,18 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  void _startBreathingExercise() async {
+    // Navegar directamente a ejercicios sin registrar episodio de pánico
+    print('[HomeScreen] Ejercicio de respiración directo iniciado');
+
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const BreathingExerciseScreen(),
+      ),
+    );
+  }
+
   Future<void> _finishEpisode() async {
     if (_episodeStartTime == null || _currentEpisodeId == null) {
       print('[HomeScreen] Error: No hay episodio activo para finalizar');
@@ -242,6 +254,46 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
+            const SizedBox(height: 32),
+
+            // Botón de ejercicios de respiración
+            if (!_isInPanicMode)
+              GestureDetector(
+                onTap: _startBreathingExercise,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(30),
+                    color: Colors.blue.shade400,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.blue.shade400.withOpacity(0.3),
+                        blurRadius: 15,
+                        spreadRadius: 2,
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(
+                        Icons.air,
+                        color: Colors.white,
+                        size: 28,
+                      ),
+                      const SizedBox(width: 12),
+                      const Text(
+                        'Ejercicios de Respiración',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             const SizedBox(height: 48),
 
             // Instrucciones

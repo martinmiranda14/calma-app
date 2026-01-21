@@ -1,0 +1,6 @@
+{
+  "buildCommand": "cd calma_flutter && flutter build web --release",
+  "outputDirectory": "calma_flutter/build/web",
+  "installCommand": "flutter --version",
+  "framework": null
+}
