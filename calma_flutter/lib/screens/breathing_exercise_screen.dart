@@ -56,13 +56,25 @@ class _BreathingExerciseScreenState extends State<BreathingExerciseScreen> with 
   }
 
   void _startCountdown() {
+    print('[DEBUG] Iniciando countdown desde: $_countdown');
+    // Cancelar cualquier timer previo
+    _timer?.cancel();
+    
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      print('[DEBUG] Countdown tick: $_countdown');
       if (_countdown > 1) {
         setState(() {
           _countdown--;
         });
+        print('[DEBUG] Countdown actualizado a: $_countdown');
       } else {
+        print('[DEBUG] Countdown completado, iniciando ejercicio');
         timer.cancel();
+        // Actualizar el estado inmediatamente antes de iniciar el ejercicio
+        setState(() {
+          _countdown = 0;
+          _currentPhase = 'Inhala profundamente';
+        });
         _startBreathingExercise();
       }
     });
@@ -75,20 +87,19 @@ class _BreathingExerciseScreenState extends State<BreathingExerciseScreen> with 
       _cycleCount = 0;
     });
 
-    // Iniciar audio si está habilitado
+    // Iniciar audio si está habilitado (sin bloquear la ejecución)
     // En web, esto funciona porque el usuario ya interactuó (presionó el botón)
     if (_audioEnabled) {
       print('[DEBUG] Iniciando audio 432Hz');
-      try {
-        await _audioService.playCalmingSound(frequency: '432Hz');
-        print('[DEBUG] Audio iniciado exitosamente');
-      } catch (e) {
+      // No esperar el audio para no bloquear el inicio del ejercicio
+      _audioService.playCalmingSound(frequency: '432Hz').catchError((e) {
         print('[DEBUG] Error al iniciar audio: $e');
         // Continuar sin audio si falla
-      }
+      });
     }
 
     print('[DEBUG] Llamando a _startBreathingCycle');
+    // Iniciar el ciclo inmediatamente, no esperar el audio
     _startBreathingCycle();
   }
 
@@ -177,7 +188,14 @@ class _BreathingExerciseScreenState extends State<BreathingExerciseScreen> with 
     }
   }
 
-  void _increaseIntensity() {
+  void _increaseIntensity() async {
+    // Cancelar cualquier timer activo
+    _timer?.cancel();
+    
+    // Detener la animación actual
+    _animationController.stop();
+    _animationController.value = 0.0;
+
     setState(() {
       _intensityLevel++;
 
@@ -198,18 +216,29 @@ class _BreathingExerciseScreenState extends State<BreathingExerciseScreen> with 
         _totalCycles = 8; // Aún más ciclos
       }
 
-      // Reiniciar el ejercicio con las nuevas configuraciones
+      // Reiniciar completamente el ejercicio con las nuevas configuraciones
       _cycleCount = 0;
       _isExercising = true;
+      _currentPhase = 'Prepárate';
+      _countdown = 3; // Reiniciar countdown
     });
 
     // Cambiar a frecuencia 528Hz para crisis más severas
+    // playCalmingSound ya maneja el stop interno si hay audio reproduciéndose
+    // No esperar el audio para no bloquear el inicio del ejercicio
     if (_audioEnabled) {
-      _audioService.stop();
-      _audioService.playCalmingSound(frequency: '528Hz');
+      _audioService.playCalmingSound(frequency: '528Hz').catchError((e) {
+        print('[DEBUG] Error al cambiar audio a 528Hz: $e');
+        // Continuar sin audio si falla
+      });
     }
 
-    _startBreathingCycle();
+    // Reiniciar el countdown inmediatamente después del setState
+    // Usar WidgetsBinding para asegurar que el setState se complete
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      print('[DEBUG] Iniciando countdown después de aumentar intensidad');
+      _startCountdown();
+    });
   }
 
   @override

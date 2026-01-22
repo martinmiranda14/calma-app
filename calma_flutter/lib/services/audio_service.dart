@@ -16,8 +16,8 @@ class AudioService {
   };
 
   Future<void> playCalmingSound({String frequency = '432Hz'}) async {
-    // NO bloquear - ejecutar en segundo plano
-    _playCalmingSoundAsync(frequency);
+    // Esperar a que se complete la reproducción del audio
+    await _playCalmingSoundAsync(frequency);
   }
 
   Future<void> _playCalmingSoundAsync(String frequency) async {
